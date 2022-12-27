@@ -79,19 +79,19 @@ public class State {
     }
 
     public int calc_hp(int HP, float distance, String operation) {
-        if (operation == "walking") {
+        if (operation.equals("walking")) {
             int temp = (int) (HP + (State.walking_energy_cost * distance));
             if (temp > 100)
                 return 100;
             else
                 return temp;
-        } else if (operation == "bus") {
+        } else if (operation.equals("bus")) {
             int temp = (int) (HP + (State.bus_energy_cost * distance));
             if (temp > 100)
                 return 100;
             else
                 return temp;
-        } else if (operation == "taxi") {
+        } else if (operation.equals("taxi")) {
             int temp = (int) (HP + (State.taxi_energy_cost * distance));
             if (temp > 100)
                 return 100;
@@ -103,14 +103,15 @@ public class State {
     }
 
     public float calc_balance(float balance, float distance, String operation) {
-        if (operation == "walking") {
+        if (operation.equals("walking")) {
             return balance - State.walking_fee;
-        } else if (operation == "bus") {
+        } else if (operation.equals("bus")) {
             return balance - State.bus_fee;
-        } else if (operation == "taxi") {
+        } else if (operation.equals("taxi")) {
             return balance - (State.taxi_fee * distance);
         } else {
             return 0;
+
         }
     }
 
