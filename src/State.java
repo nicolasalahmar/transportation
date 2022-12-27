@@ -104,6 +104,7 @@ public class State {
             return balance - (State.taxi_fee * distance);
         } else {
             return 0;
+
         }
     }
 
