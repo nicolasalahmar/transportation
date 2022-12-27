@@ -7,21 +7,21 @@ import java.util.Objects;
 
 public class State {
     State parent;
-    float balance;
-    int HP;
+    double balance;
+    double HP;
     String currentStation;
 
-    static float walking_speed = 5.5F;
-    static int bus_fee = 400;
-    static int taxi_fee = 1000;
-    static int walking_fee = 0;
-    static int bus_energy_cost = -5;
-    static int taxi_energy_cost = 5;
-    static int walking_energy_cost = -10;
+    static double walking_speed = 5.5F;
+    static double bus_fee = 400;
+    static double taxi_fee = 1000;
+    static double walking_fee = 0;
+    static double bus_energy_cost = -5;
+    static double taxi_energy_cost = 5;
+    static double walking_energy_cost = -10;
     static Map<String, Map<String, Edge>> edges;
     static Map<String, Double[]> stations = new HashMap<String, Double[]>(); // i think float instead of Float will make some problems
 
-    public State(State parent, float balance, int HP, String currentStation) {
+    public State(State parent, double balance, double HP, String currentStation) {
         this.parent = parent;
         this.balance = balance;
         this.HP = HP;
@@ -35,8 +35,8 @@ public class State {
         int i = 0;
         for (Map.Entry<String, Edge> entry : moves.entrySet()) {
             Edge e = entry.getValue();
-            int new_hp_walking, new_hp_bus, new_hp_taxi;
-            float new_balance_walking, new_balance_bus, new_balance_taxi;
+            double new_hp_walking, new_hp_bus, new_hp_taxi;
+            double new_balance_walking, new_balance_bus, new_balance_taxi;
             // new hp and new balance in case of walking to next station
             new_hp_walking = this.calc_hp(this.HP, e.distance, "walking");
             new_balance_walking = this.calc_balance(this.balance, e.distance, "walking");
@@ -78,21 +78,21 @@ public class State {
         return result;
     }
 
-    public int calc_hp(int HP, float distance, String operation) {
+    public double calc_hp(double HP, double distance, String operation) {
         if (operation.equals("walking")) {
-            int temp = (int) (HP + (State.walking_energy_cost * distance));
+            double temp = HP + (State.walking_energy_cost * distance);
             if (temp > 100)
                 return 100;
             else
                 return temp;
         } else if (operation.equals("bus")) {
-            int temp = (int) (HP + (State.bus_energy_cost * distance));
+            double temp = HP + (State.bus_energy_cost * distance);
             if (temp > 100)
                 return 100;
             else
                 return temp;
         } else if (operation.equals("taxi")) {
-            int temp = (int) (HP + (State.taxi_energy_cost * distance));
+            double temp = HP + (State.taxi_energy_cost * distance);
             if (temp > 100)
                 return 100;
             else
@@ -102,7 +102,7 @@ public class State {
         }
     }
 
-    public float calc_balance(float balance, float distance, String operation) {
+    public double calc_balance(double balance, double distance, String operation) {
         if (operation.equals("walking")) {
             return balance - State.walking_fee;
         } else if (operation.equals("bus")) {
@@ -117,10 +117,10 @@ public class State {
 
     public class balance_hp_entry{
         String entry;
-        int hp;
-        Float balance;
+        double hp;
+        double balance;
 
-        public balance_hp_entry(float balance,int hp,String entry){
+        public balance_hp_entry(double balance,double hp,String entry){
             this.entry = entry;
             this.balance = balance;
             this.hp = hp;
