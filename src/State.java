@@ -7,18 +7,19 @@ import java.util.Objects;
 
 public class State {
     State parent;
+    float balance;
+    int HP;
+    String currentStation;
+
     static float walking_speed = 5.5F;
-    static Map<String, float[]> stations; // i think float instead of Float will make some problems
     static int bus_fee = 400;
     static int taxi_fee = 1000;
     static int walking_fee = 0;
-    float balance = 10000;
-    int HP = 100;
     static int bus_energy_cost = -5;
     static int taxi_energy_cost = 5;
     static int walking_energy_cost = -10;
     static Map<String, Map<String, Edge>> edges;
-    String currentStation;
+    static Map<String, Double[]> stations = new HashMap<String, Double[]>(); // i think float instead of Float will make some problems
 
     public State(State parent, float balance, int HP, String currentStation) {
         this.parent = parent;
@@ -27,13 +28,10 @@ public class State {
         this.currentStation = currentStation;
     }
 
-    public Map<String, Edge> checkMoves() {
-        return State.edges.get(currentStation);
-    }
+    public balance_hp_entry[] checkMoves() {
+        Map<String, Edge> moves = State.edges.get(currentStation);
 
-    public State[] getNextStates() {
-        Map<String, Edge> moves = checkMoves();
-        State[] result = new State[moves.size() * 3];
+        balance_hp_entry[] result = new balance_hp_entry[moves.size() * 3];
         int i = 0;
         for (Map.Entry<String, Edge> entry : moves.entrySet()) {
             Edge e = entry.getValue();
@@ -50,23 +48,32 @@ public class State {
             new_balance_taxi = this.calc_balance(this.balance, e.distance, "taxi");
 
             if (new_hp_walking > 0 && new_balance_walking > 0) {// you can walk (hp allows it /balance allows it))
-                result[i] = new State(this, new_balance_walking, new_hp_walking, entry.getKey());
+                result[i] = new balance_hp_entry(new_balance_walking, new_hp_walking, entry.getKey());
                 i++;
             }
 
             if (e.bus_route && new_hp_bus > 0 && new_balance_bus > 0) {
                 // you can take the bus (there is bus route/
                 // hp allows it /balance allows it)
-                result[i] = new State(this, new_balance_bus, new_hp_bus, entry.getKey());
+                result[i] = new balance_hp_entry(new_balance_bus, new_hp_bus, entry.getKey());
                 i++;
             }
 
             if (e.taxi_route && new_hp_taxi > 0 && new_balance_taxi > 0) {
                 // you can take a taxi (there is taxi route/
                 // hp allows it / balance allows it)
-                result[i] = new State(this, new_balance_taxi, new_hp_taxi, entry.getKey());
+                result[i] = new balance_hp_entry(new_balance_taxi, new_hp_taxi, entry.getKey());
                 i++;
             }
+        }
+        return result;
+    }
+
+    public ArrayList<State> getNextStates() {
+        balance_hp_entry[] moves = checkMoves();
+        ArrayList<State> result = new ArrayList<>();
+        for (balance_hp_entry move : moves){
+            result.add(new State(this, move.balance, move.hp, move.entry));
         }
         return result;
     }
@@ -107,4 +114,15 @@ public class State {
         }
     }
 
+    public class balance_hp_entry{
+        String entry;
+        int hp;
+        Float balance;
+
+        public balance_hp_entry(float balance,int hp,String entry){
+            this.entry = entry;
+            this.balance = balance;
+            this.hp = hp;
+        }
+    }
 }
