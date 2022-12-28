@@ -7,17 +7,8 @@ import java.util.Objects;
 
 public class State {
     State parent;
-    static float walking_speed = 5.5F;
-    static HashMap<String, Double[]> stations;   // i think float instead of Float will make some problems
-    static int bus_fee = 400;
-    static int taxi_fee = 1000;
-    static int walking_fee = 0;
-    float balance;
-    int HP;
-    static int bus_energy_cost = -5;
-    static int taxi_energy_cost = 5;
-    static int walking_energy_cost = -10;
-    static HashMap<String, HashMap<String, Edge>> edges;
+    double balance;
+    double HP;
     String currentStation;
 
     static double walking_speed = 5.5F;
@@ -38,37 +29,41 @@ public class State {
         this.currentStation = currentStation;
     }
 
-    public Map<String, Edge> checkMoves() {
-        return State.edges.get(currentStation);
-    }
+    public balance_hp_entry[] checkMoves() {
+        Map<String, Edge> moves = State.edges.get(currentStation);
 
-    public State[] getNextStates() {
-        Map<String, Edge> moves = checkMoves();
-        State[] result = new State[moves.size() * 3];
+        balance_hp_entry[] result = new balance_hp_entry[moves.size() * 3];
         int i = 0;
         for (Map.Entry<String, Edge> entry : moves.entrySet()) {
             Edge e = entry.getValue();
-            if (HP + (State.walking_energy_cost * e.distance) > 0
-                    && balance - State.walking_fee > 0) {// you can walk
-                result[i] = new State(this, balance,
-                        (int) (HP + (State.walking_energy_cost * e.distance)), entry.getKey());
+            double new_hp_walking, new_hp_bus, new_hp_taxi;
+            double new_balance_walking, new_balance_bus, new_balance_taxi;
+            // new hp and new balance in case of walking to next station
+            new_hp_walking = this.calc_hp(this.HP, e.distance, "walking");
+            new_balance_walking = this.calc_balance(this.balance, e.distance, "walking");
+            // new hp and new balance in case of bus to next station
+            new_hp_bus = this.calc_hp(this.HP, e.distance, "bus");
+            new_balance_bus = this.calc_balance(this.balance, e.distance, "bus");
+            // new hp and new balance in case of taxi to next station
+            new_hp_taxi = this.calc_hp(this.HP, e.distance, "taxi");
+            new_balance_taxi = this.calc_balance(this.balance, e.distance, "taxi");
+
+            if (new_hp_walking > 0 && new_balance_walking > 0) {// you can walk (hp allows it /balance allows it))
+                result[i] = new balance_hp_entry(new_balance_walking, new_hp_walking, entry.getKey());
                 i++;
             }
 
-            if (e.bus_route && HP + (State.bus_energy_cost * e.distance) > 0
-                    && balance - State.bus_fee > 0) {// you can take the bus (there is bus route/
-                                                     // hp allows it /balance allows it)
-                result[i] = new State(this, balance,
-                        (int) (HP + (State.bus_energy_cost * e.distance)), entry.getKey());
+            if (e.bus_route && new_hp_bus > 0 && new_balance_bus > 0) {
+                // you can take the bus (there is bus route/
+                // hp allows it /balance allows it)
+                result[i] = new balance_hp_entry(new_balance_bus, new_hp_bus, entry.getKey());
                 i++;
             }
 
-            if (e.taxi_route && HP + (State.taxi_energy_cost * e.distance) > 0
-                    && balance - (State.taxi_fee * e.distance) > 0) {// you can take a taxi (there
-                                                                     // is taxi route/ hp allows it
-                                                                     // /balance allows it)
-                result[i] = new State(this, balance,
-                        (int) (HP + (State.taxi_energy_cost * e.distance)), entry.getKey());
+            if (e.taxi_route && new_hp_taxi > 0 && new_balance_taxi > 0) {
+                // you can take a taxi (there is taxi route/
+                // hp allows it / balance allows it)
+                result[i] = new balance_hp_entry(new_balance_taxi, new_hp_taxi, entry.getKey());
                 i++;
             }
         }

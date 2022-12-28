@@ -1,9 +1,9 @@
 class Edge {
-    double distance;
+    float distance;
     boolean bus_route;
     boolean taxi_route;
-    double bus_speed;
-    double taxi_speed;
+    float bus_speed;
+    float taxi_speed;
 
     public Edge(){
         distance = 0;
@@ -12,7 +12,7 @@ class Edge {
         bus_speed = 0;
         taxi_speed = 0;
     }
-    public Edge(double distance, boolean bus_route, boolean taxi_route, double bus_speed, double taxi_speed){
+    public Edge(int distance, boolean bus_route, boolean taxi_route, float bus_speed, float taxi_speed){
         this.distance = distance;
         this.bus_route = bus_route;
         this.taxi_route = taxi_route;
