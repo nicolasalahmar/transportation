@@ -11,7 +11,7 @@ public class State {
     double HP;
     String currentStation;
 
-    static double walking_speed = 5.5F;
+    static double walking_speed = 5.5;
     static double bus_fee = 400;
     static double taxi_fee = 1000;
     static double walking_fee = 0;
@@ -129,13 +129,13 @@ public class State {
     }
 
     public boolean equals(State o2){
-        boolean[] arr = {this.balance == o2.balance, this.HP == o2.HP, this.currentStation == o2.currentStation, this.parent == o2.parent};
+        boolean[] arr = {this.balance == o2.balance, this.HP == o2.HP, this.currentStation.equals(o2.currentStation), this.parent == o2.parent};
         for(boolean b : arr) if(!b) return false;
         return true;
     }
 
     public boolean isFinal(){
-        return currentStation == finalState;
+        return currentStation.equals(finalState);
     }
 
     // public function State move(){
