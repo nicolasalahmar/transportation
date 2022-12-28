@@ -20,6 +20,7 @@ public class State {
     static double walking_energy_cost = -10;
     static Map<String, Map<String, Edge>> edges;
     static Map<String, Double[]> stations = new HashMap<String, Double[]>(); // i think float instead of Float will make some problems
+    static String finalState;
 
     public State(State parent, double balance, double HP, String currentStation) {
         this.parent = parent;
@@ -126,4 +127,18 @@ public class State {
             this.hp = hp;
         }
     }
+
+    public boolean equals(State o2){
+        boolean[] arr = {this.balance == o2.balance, this.HP == o2.HP, this.currentStation == o2.currentStation, this.parent == o2.parent};
+        for(boolean b : arr) if(!b) return false;
+        return true;
+    }
+
+    public boolean isFinal(){
+        return currentStation == finalState;
+    }
+
+    // public function State move(){
+
+    // }
 }
