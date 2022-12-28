@@ -77,7 +77,7 @@ public class State {
         balance_hp_entry_time[] moves = checkMoves();
         ArrayList<State> result = new ArrayList<>();
         for (balance_hp_entry_time move : moves){
-            result.add(new State(this, move.balance, move.hp, move.entry, move.time));
+            result.add(this.move(move.balance, move.hp, move.entry, move.time));
         }
         return result;
     }
@@ -157,7 +157,23 @@ public class State {
         return currentStation.equals(finalState);
     }
 
-    // public function State move(){
+    public State move(double balance, double HP, String station, double time){
+        return new State(this, balance, HP, station, time);
+    }
 
-    // }
+    public String toString(){
+        return "station: "+this.currentStation + "\nHP: "+this.HP+"\nBalance: "+this.balance+"\ntime: "+this.time+"\n";
+    }
+
+    public void printState(){
+        System.out.println(this);
+    }
+
+    public void printPath(){
+        State temp = this.parent;
+        while (temp!=null){
+            System.out.println(temp);
+            temp = temp.parent;
+        }
+    }
 }
