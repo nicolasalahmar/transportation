@@ -8,7 +8,8 @@ public class State {
     double HP;
     String currentStation;
     double time;
-
+String name;
+double total_cost;
     static double walking_speed = 5.5;
     static double bus_fee = 400;
     static double taxi_fee = 1000;
