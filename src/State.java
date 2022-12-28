@@ -17,7 +17,7 @@ public class State {
     static double taxi_energy_cost = 5;
     static double walking_energy_cost = -10;
     static Map<String, Map<String, Edge>> edges;
-    static Map<String, Double[]> stations = new HashMap<String, Double[]>(); // i think float instead of Float will make some problems
+    static Map<String, Double[]> stations = new HashMap<>(); // i think float instead of Float will make some problems
     static String finalState;
 
     public State(State parent, double balance, double HP, String currentStation, double time) {
