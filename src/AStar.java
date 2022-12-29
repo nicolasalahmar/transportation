@@ -6,6 +6,7 @@ public class AStar {
         aStar(state);
     }
 
+
     public void aStar(State state){
 
         ArrayList<State> open = new ArrayList<State>();
