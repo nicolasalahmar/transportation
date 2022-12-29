@@ -5,6 +5,7 @@ import java.util.Map;
 public class State {
     State parent;
     double balance;
+    double spent_money;
     double HP;
     String currentStation;
     double time;
@@ -13,24 +14,27 @@ public class State {
     double total_cost;
 
 
-    static double walking_speed = 5.5;
-    static double bus_fee = 400;
-    static double taxi_fee = 1000;
-    static double walking_fee = 0;
-    static double bus_energy_cost = -5;
-    static double taxi_energy_cost = 5;
-    static double walking_energy_cost = -10;
+    static double walking_speed;
+    static double bus_fee;
+    static double taxi_fee;
+    static double walking_fee;
+    static double bus_energy_cost;
+    static double taxi_energy_cost;
+    static double walking_energy_cost;
     static Map<String, Map<String, Edge>> edges = new HashMap<>();;
     static Map<String, Double[]> stations = new HashMap<>(); // i think float instead of Float will make some problems
     static String finalState;
 
-    public State(State parent, double balance, double HP, String currentStation, double time, String operation) {
+    public State(State parent, double balance, double spent_money, double HP, String currentStation, double time, String operation) {
         this.parent = parent;
         this.balance = balance;
         this.HP = HP;
         this.currentStation = currentStation;
         this.time = time;
         this.operation = operation;
+        this.spent_money = spent_money;
+        this.cost = 0;
+        this.total_cost = 0;
     }
 
     public balance_hp_entry_time_operation[] checkMoves() {
@@ -57,21 +61,21 @@ public class State {
             new_time_taxi = this.calc_time(e.distance, e.taxi_speed, "taxi");
 
             if (new_hp_walking > 0 && new_balance_walking > 0) {// you can walk (hp allows it /balance allows it))
-                result[i] = new balance_hp_entry_time_operation(new_balance_walking, new_hp_walking, entry.getKey(), new_time_walking, "walking");
+                result[i] = new balance_hp_entry_time_operation(new_balance_walking, this.spent_money + (this.balance - new_balance_walking), new_hp_walking, entry.getKey(), new_time_walking, "walking");
                 i++;
             }
 
             if (e.bus_route && new_hp_bus > 0 && new_balance_bus > 0) {
                 // you can take the bus (there is bus route/
                 // hp allows it /balance allows it)
-                result[i] = new balance_hp_entry_time_operation(new_balance_bus, new_hp_bus, entry.getKey(), new_time_bus, "bus");
+                result[i] = new balance_hp_entry_time_operation(new_balance_bus, this.spent_money + (this.balance - new_balance_bus), new_hp_bus, entry.getKey(), new_time_bus, "bus");
                 i++;
             }
 
             if (e.taxi_route && new_hp_taxi > 0 && new_balance_taxi > 0) {
                 // you can take a taxi (there is taxi route/
                 // hp allows it / balance allows it)
-                result[i] = new balance_hp_entry_time_operation(new_balance_taxi, new_hp_taxi, entry.getKey(), new_time_taxi, "taxi");
+                result[i] = new balance_hp_entry_time_operation(new_balance_taxi, this.spent_money + (this.balance - new_balance_taxi), new_hp_taxi, entry.getKey(), new_time_taxi, "taxi");
                 i++;
             }
         }
@@ -82,7 +86,7 @@ public class State {
         balance_hp_entry_time_operation[] moves = checkMoves();
         ArrayList<State> result = new ArrayList<>();
         for (balance_hp_entry_time_operation move : moves){
-            result.add(this.move(move.balance, move.hp, move.entry, move.time, move.operation));
+            result.add(this.move(move.balance, move.spent_money, move.hp, move.entry, move.time, move.operation));
         }
         return result;
     }
@@ -143,13 +147,15 @@ public class State {
         double balance;
         double time;
         String operation;
+        double spent_money;
 
-        public balance_hp_entry_time_operation(double balance,double hp,String entry, double time, String operation){
+        public balance_hp_entry_time_operation(double balance, double spent_money, double hp,String entry, double time, String operation){
             this.entry = entry;
             this.balance = balance;
             this.hp = hp;
             this.time = time;
             this.operation = operation;
+            this.spent_money = spent_money;
         }
     }
 
@@ -163,8 +169,8 @@ public class State {
         return currentStation.equals(finalState);
     }
 
-    public State move(double balance, double HP, String station, double time, String operation){
-        return new State(this, balance, HP, station, time, operation);
+    public State move(double balance, double spent_money, double HP, String station, double time, String operation){
+        return new State(this, balance, spent_money, HP, station, time, operation);
     }
 
     public String toString(){
