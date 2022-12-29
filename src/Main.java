@@ -1,4 +1,5 @@
 import java.util.Map;
+import java.util.Objects;
 
 public class Main {
 
@@ -12,6 +13,7 @@ public class Main {
 //        State.stations.put("m5", new Double[]{ 4.5, 1.5});
         ReadJson json = new ReadJson();
         json.read();
+
         // State.edges.put
     }
 }

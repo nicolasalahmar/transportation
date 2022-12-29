@@ -20,7 +20,7 @@ public class State {
     static double bus_energy_cost = -5;
     static double taxi_energy_cost = 5;
     static double walking_energy_cost = -10;
-    static Map<String, Map<String, Edge>> edges;
+    static Map<String, Map<String, Edge>> edges = new HashMap<>();;
     static Map<String, Double[]> stations = new HashMap<>(); // i think float instead of Float will make some problems
     static String finalState;
 
