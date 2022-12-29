@@ -42,12 +42,12 @@ public class AStar {
 
                 }else if(inArrayList(open, child) && child.cost>node.cost+State.edges.get(node.currentStation).get(child.currentStation).distance){
                     child.cost=node.cost+State.edges.get(node.currentStation).get(child.currentStation).distance;
-                    child.total_cost = child.cost+heuristic(child);
+                    child.total_cost = child.cost+heuristic(child,algorithm);
                     child.parent = node;
 
                 }else if(inArrayList(close, child) && child.cost>node.cost+State.edges.get(node.currentStation).get(child.currentStation).distance){
                     child.cost=node.cost+State.edges.get(node.currentStation).get(child.currentStation).distance;
-                    child.total_cost = child.cost+heuristic(child);
+                    child.total_cost = child.cost+heuristic(child,algorithm);
                     child.parent = node;
 
                 }
@@ -58,11 +58,11 @@ public class AStar {
 
     public double cost(State state,String algorithm){
 
-        if(algorithm=="fastestTime"){
+        if(algorithm.equals("fastestTime")){
             return state.time;
-        }else if(algorithm=="leastCost"){
+        }else if(algorithm.equals("leastCost")){
 
-        }else if(algorithm=="maxHp"){
+        }else if(algorithm.equals("maxHp")){
 
         }else{
 
@@ -93,8 +93,21 @@ public class AStar {
         return false;
     }
 
-    public double heuristic(State state){
-        return State.edges.get(state.currentStation).get(State.finalState).distance;
+    public double heuristic(State state,String algorithm){
+        if(algorithm.equals("fastestTime")){
+            return State.edges.get(state.currentStation).get(State.finalState).distance;
+
+        }else if(algorithm.equals("leastCost")){
+
+
+        }else if(algorithm.equals("maxHp")){
+
+
+        }
+        else{} return 0;
+
+
+
     }
 
 
