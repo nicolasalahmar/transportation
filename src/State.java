@@ -9,6 +9,9 @@ public class State {
     String currentStation;
     double time;
     String operation;
+    double cost;
+    double total_cost;
+
 
     static double walking_speed = 5.5;
     static double bus_fee = 400;
