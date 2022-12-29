@@ -1,5 +1,5 @@
 class Edge {
-    float distance;
+    double distance;
     boolean bus_route;
     boolean taxi_route;
     float bus_speed;
