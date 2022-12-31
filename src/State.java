@@ -37,11 +37,9 @@ public class State {
         this.total_cost = 0;
     }
 
-    public balance_hp_entry_time_operation[] checkMoves() {
+    public ArrayList<balance_hp_entry_time_operation> checkMoves() {
         Map<String, Edge> moves = State.edges.get(currentStation);
-
-        balance_hp_entry_time_operation[] result = new balance_hp_entry_time_operation[moves.size() * 3];
-        int i = 0;
+        ArrayList<balance_hp_entry_time_operation> result = new ArrayList<>();
         for (Map.Entry<String, Edge> entry : moves.entrySet()) {
             Edge e = entry.getValue();
             double new_hp_walking, new_hp_bus, new_hp_taxi;
@@ -61,29 +59,26 @@ public class State {
             new_time_taxi = this.calc_time(e.distance, e.taxi_speed, "taxi");
 
             if (new_hp_walking > 0 && new_balance_walking > 0) {// you can walk (hp allows it /balance allows it))
-                result[i] = new balance_hp_entry_time_operation(new_balance_walking, this.spent_money + (this.balance - new_balance_walking), new_hp_walking, entry.getKey(), new_time_walking, "walking");
-                i++;
+                result.add(new balance_hp_entry_time_operation(new_balance_walking, this.spent_money + (this.balance - new_balance_walking), new_hp_walking, entry.getKey(), new_time_walking, "walking"));
             }
 
             if (e.bus_route && new_hp_bus > 0 && new_balance_bus > 0) {
                 // you can take the bus (there is bus route/
                 // hp allows it /balance allows it)
-                result[i] = new balance_hp_entry_time_operation(new_balance_bus, this.spent_money + (this.balance - new_balance_bus), new_hp_bus, entry.getKey(), new_time_bus, "bus");
-                i++;
+                result.add(new balance_hp_entry_time_operation(new_balance_bus, this.spent_money + (this.balance - new_balance_bus), new_hp_bus, entry.getKey(), new_time_bus, "bus"));
             }
 
             if (e.taxi_route && new_hp_taxi > 0 && new_balance_taxi > 0) {
                 // you can take a taxi (there is taxi route/
                 // hp allows it / balance allows it)
-                result[i] = new balance_hp_entry_time_operation(new_balance_taxi, this.spent_money + (this.balance - new_balance_taxi), new_hp_taxi, entry.getKey(), new_time_taxi, "taxi");
-                i++;
+                result.add(new balance_hp_entry_time_operation(new_balance_taxi, this.spent_money + (this.balance - new_balance_taxi), new_hp_taxi, entry.getKey(), new_time_taxi, "taxi"));
             }
         }
         return result;
     }
 
     public ArrayList<State> getNextStates() {
-        balance_hp_entry_time_operation[] moves = checkMoves();
+        ArrayList<balance_hp_entry_time_operation> moves = checkMoves();
         ArrayList<State> result = new ArrayList<>();
         for (balance_hp_entry_time_operation move : moves){
             result.add(this.move(move.balance, move.spent_money, move.hp, move.entry, move.time, move.operation));
@@ -156,6 +151,10 @@ public class State {
             this.time = time;
             this.operation = operation;
             this.spent_money = spent_money;
+        }
+
+        public String toString(){
+            return "station: "+entry+"\nhp: "+hp+"\n"+balance+"\ntime: "+time+"\noperation: "+operation+"\nspent money: "+spent_money+"\n";
         }
     }
 
