@@ -8,14 +8,11 @@ public class Main {
         State s = new State(null,10000, 0, 100, "Hamak", 0, "");
         //this.stations.put(station name, [bus waiting time, taxi waiting time])
         Main.func();
-        // System.out.println(s.getNextStates());
-        // State.balance_hp_entry_time_operation[] temp = s.checkMoves();
-        // for (State st : s.getNextStates()){
-        //     System.out.println(st);
-        // }
-        AStar aStar = new AStar(s,"fastestTime");
-        State result = aStar.aStar();
-        result.printPath();
+
+        Anjme a = new Anjme("fastestTime", s);
+        State t = a.search();
+        System.out.println(t);
+        // t.printPath();
 
         // System.out.println(State.edges.get(s.currentStation));
         
@@ -44,10 +41,10 @@ public class Main {
 
         Map<String, Edge>temp = new HashMap<>();
 
-        temp.put("Bab sharqui", new Edge(5, false,false,40,50,"hamak - bab sharqui"));
+        temp.put("Bab sharqui", new Edge(5, true, false,40,50,"hamak - bab sharqui"));
         temp.put("Bab Touma", new Edge(7,true,false,40,50,"hamak - bab touma"));
         temp.put("Abbasyian", new Edge(9, false, false, 40, 50, "hamak - Abbasyian"));
-        temp.put("Kassaa", new Edge(1, false, true, 40, 50, "hamak - Kassaa"));
+        temp.put("Kassaa", new Edge(12, false, true, 40, 50, "hamak - Kassaa"));
 
         State.edges.put("Hamak", temp);
 
@@ -57,7 +54,7 @@ public class Main {
         Map<String, Edge>temp2 = new HashMap<>();
 
         temp2.put("Hamak", new Edge(5, false, false, 40, 50, "Bab sharqui - Hamak"));
-        temp2.put("Bab Touma", new Edge(3, false, false, 40, 50, "Bab sharqui - Bab Touma"));
+        temp2.put("Bab Touma", new Edge(3, false, true, 40, 50, "Bab sharqui - Bab Touma"));
         temp2.put("Abbasyian", new Edge(5, false, true, 40, 50, "Bab sharqui - Abbasyian"));
         temp2.put("Kassaa", new Edge(6, false, false, 40, 50, "Bab sharqui - Kassaa"));
 
@@ -69,7 +66,7 @@ public class Main {
 
         temp3.put("Hamak", new Edge(7, false, false, 40, 50, "Bab Touma - Hamak"));
         temp3.put("Bab sharqui", new Edge(3, true, true, 40, 50, "Bab Touma - bab sharqui"));
-        temp3.put("Abbasyian", new Edge(2, false, true, 40, 50, "Bab Touma - Abbasyian"));
+        temp3.put("Abbasyian", new Edge(2, true, false, 40, 50, "Bab Touma - Abbasyian"));
         temp3.put("Kassaa", new Edge(10, false, false, 40, 50, "Bab Touma - Kassaa"));
 
         State.edges.put("Bab Touma", temp3);
@@ -89,7 +86,7 @@ public class Main {
 
         Map<String, Edge>temp5 = new HashMap<>();
 
-        temp5.put("Hamak", new Edge(1, false, false, 40, 50, "Kassaa - Hamak"));
+        temp5.put("Hamak", new Edge(12, false, false, 40, 50, "Kassaa - Hamak"));
         temp5.put("Bab sharqui", new Edge(6, false, false, 40, 50, "Kassaa - bab sharqui"));
         temp5.put("Bab Touma", new Edge(10, false, false, 40, 50, "Kassaa - Bab Touma"));
         temp5.put("Abbasyian", new Edge(1, false, false, 40, 50, "Kassaa - Abbasyian"));

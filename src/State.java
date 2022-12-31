@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class State {
+public class State implements Comparable<State>{
     State parent;
     double balance;
     double spent_money;
@@ -185,6 +185,19 @@ public class State {
         while (temp!=null){
             System.out.println(temp);
             temp = temp.parent;
+        }
+    }
+
+    @Override public int compareTo(State o)
+    {
+        if (this.total_cost > o.total_cost) {
+            return 1;
+        }
+        else if (this.total_cost < o.total_cost) {
+            return -1;
+        }
+        else {
+            return 0;
         }
     }
 }
