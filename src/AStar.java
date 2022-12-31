@@ -2,58 +2,64 @@ import java.util.ArrayList;
 
 public class AStar {
 
+    State state;
+    String algorithm;
+
     public AStar(State state,String algorithm){
-        aStar(state,algorithm);
+        this.state = state;
+        this.algorithm = algorithm;
     }
 
 
-    public void aStar(State state,String algorithm){
+    public State aStar(){
 
-        ArrayList<State> open = new ArrayList<State>();
-        ArrayList<State> close = new ArrayList<State>();
+        ArrayList<State> queue = new ArrayList<State>();
+        ArrayList<State> visited = new ArrayList<State>();
 
         state.cost = cost(state,algorithm);
-        open.add(state);
+        queue.add(state);
 
-
+        
         while(true){
-            if(open.isEmpty()){
+            if(queue.isEmpty()){
                 System.out.println("No solution found");
                 break;
             }
+            
+            State node = leastCost(queue);
 
-            State node = leastCost(open);
-
-            open.remove(node);
-
+            queue.remove(node);
+            
             if(node.isFinal()){
                 System.out.println("Final");
+                return node;
             }
 
-            close.add(node);
+            visited.add(node);
             ArrayList<State> children = node.getNextStates();
 
             for (State child : children){
                 child.cost=cost(child,algorithm);
 
-                if(!inArrayList(open, child) && !inArrayList(close, child)){
-                    open.add(child);
+                if(!inArrayList(queue, child) && !inArrayList(visited, child)){
+                    queue.add(child);
                     child.parent = node;
 
-                }else if(inArrayList(open, child) && child.cost>node.cost+State.edges.get(node.currentStation).get(child.currentStation).distance){
+                }else if(inArrayList(queue, child) && child.cost>node.cost+State.edges.get(node.currentStation).get(child.currentStation).distance){
                     child.cost=node.cost+State.edges.get(node.currentStation).get(child.currentStation).distance;
                     child.total_cost = child.cost+heuristic(child,algorithm);
                     child.parent = node;
 
-                }else if(inArrayList(close, child) && child.cost>node.cost+State.edges.get(node.currentStation).get(child.currentStation).distance){
+                }else if(inArrayList(visited, child) && child.cost>node.cost+State.edges.get(node.currentStation).get(child.currentStation).distance){
                     child.cost=node.cost+State.edges.get(node.currentStation).get(child.currentStation).distance;
                     child.total_cost = child.cost+heuristic(child,algorithm);
                     child.parent = node;
 
                 }
             }
+            
         }
-
+        return null;
     }
 
     public double cost(State state,String algorithm){

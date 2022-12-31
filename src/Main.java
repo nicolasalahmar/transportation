@@ -10,9 +10,13 @@ public class Main {
         Main.func();
         // System.out.println(s.getNextStates());
         // State.balance_hp_entry_time_operation[] temp = s.checkMoves();
-        for (State st : s.getNextStates()){
-            System.out.println(st);
-        }
+        // for (State st : s.getNextStates()){
+        //     System.out.println(st);
+        // }
+        AStar aStar = new AStar(s,"fastestTime");
+        State result = aStar.aStar();
+        result.printPath();
+
         // System.out.println(State.edges.get(s.currentStation));
         
 
@@ -43,7 +47,7 @@ public class Main {
         temp.put("Bab sharqui", new Edge(5, false,false,40,50,"hamak - bab sharqui"));
         temp.put("Bab Touma", new Edge(7,true,false,40,50,"hamak - bab touma"));
         temp.put("Abbasyian", new Edge(9, false, false, 40, 50, "hamak - Abbasyian"));
-        temp.put("Kassaa", new Edge(12, false, true, 40, 50, "hamak - Kassaa"));
+        temp.put("Kassaa", new Edge(1, false, true, 40, 50, "hamak - Kassaa"));
 
         State.edges.put("Hamak", temp);
 
@@ -85,7 +89,7 @@ public class Main {
 
         Map<String, Edge>temp5 = new HashMap<>();
 
-        temp5.put("Hamak", new Edge(12, false, false, 40, 50, "Kassaa - Hamak"));
+        temp5.put("Hamak", new Edge(1, false, false, 40, 50, "Kassaa - Hamak"));
         temp5.put("Bab sharqui", new Edge(6, false, false, 40, 50, "Kassaa - bab sharqui"));
         temp5.put("Bab Touma", new Edge(10, false, false, 40, 50, "Kassaa - Bab Touma"));
         temp5.put("Abbasyian", new Edge(1, false, false, 40, 50, "Kassaa - Abbasyian"));

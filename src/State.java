@@ -181,7 +181,7 @@ public class State {
     }
 
     public void printPath(){
-        State temp = this.parent;
+        State temp = this;
         while (temp!=null){
             System.out.println(temp);
             temp = temp.parent;
