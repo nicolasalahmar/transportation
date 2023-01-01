@@ -9,8 +9,17 @@ public class Main {
         Main.func();
 
         Astar a = new Astar("fastestTime", s);
+
+        double start = System.nanoTime();
         State t = a.search();
+        double finish = System.nanoTime();
+
+        System.out.println("path: ");
         t.printPath();
+        System.out.println("number of nodes processed: "+a.m);
+        System.out.println("number of nodes instantiated: "+a.n);
+        System.out.println("time of execution: "+((finish - start)/1000000)+" ms");
+
         // t.printPath();
 
         // System.out.println(State.edges.get(s.currentStation));

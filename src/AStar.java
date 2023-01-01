@@ -8,6 +8,7 @@ public class Astar {
     HashMap<String, Double> dist = new HashMap<>();
     State s;
     String algorithm;
+    int n,m;
 
 
     public Astar(String algorithm, State s){
@@ -19,7 +20,10 @@ public class Astar {
         else{
             this.q = new PriorityQueue<State>();
         }
+
         this.s = s;
+        this.m=0;
+        this.n=0;
 
         for (Map.Entry<String, Double[]> entry : State.stations.entrySet()){    //initialize the distance array
             this.dist.put(entry.getKey(), 99999999.9);
@@ -37,6 +41,8 @@ public class Astar {
          while(!q.isEmpty()){
             current_state = q.poll();
 
+            this.m++;
+
             if (current_state.isFinal()){
                 return current_state;
             }
@@ -47,6 +53,7 @@ public class Astar {
                 for (State child : current_state.getNextStates()){
                     child.cost = cost(child, algorithm);
                     child.total_cost = child.cost + heuristic(child, algorithm);
+                    this.n++;
 
                     w = child.cost - child.parent.cost;
                     if (current_state.cost + w  < this.dist.get(child.currentStation)){
