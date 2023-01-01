@@ -6,6 +6,7 @@ public class State implements Comparable<State>{
     State parent;
     double balance;
     double spent_money;
+    double spent_HP;
     double HP;
     String currentStation;
     double time;
@@ -25,7 +26,7 @@ public class State implements Comparable<State>{
     static Map<String, Double[]> stations = new HashMap<>(); // i think float instead of Float will make some problems
     static String finalState;
 
-    public State(State parent, double balance, double spent_money, double HP, String currentStation, double time, String operation) {
+    public State(State parent, double balance, double spent_money, double spent_HP, double HP, String currentStation, double time, String operation) {
         this.parent = parent;
         this.balance = balance;
         this.HP = HP;
@@ -33,6 +34,7 @@ public class State implements Comparable<State>{
         this.time = time;
         this.operation = operation;
         this.spent_money = spent_money;
+        this.spent_HP = spent_HP;
         this.cost = 0;
         this.total_cost = 0;
     }
@@ -59,19 +61,19 @@ public class State implements Comparable<State>{
             new_time_taxi = this.calc_time(e.distance, e.taxi_speed, "taxi");
 
             if (new_hp_walking > 0 && new_balance_walking > 0) {// you can walk (hp allows it /balance allows it))
-                result.add(new balance_hp_entry_time_operation(new_balance_walking, this.spent_money + (this.balance - new_balance_walking), new_hp_walking, entry.getKey(), new_time_walking, "walking"));
+                result.add(new balance_hp_entry_time_operation(new_balance_walking, this.spent_money + (this.balance - new_balance_walking), this.HP - new_hp_walking, new_hp_walking, entry.getKey(), new_time_walking, "walking"));
             }
 
             if (e.bus_route && new_hp_bus > 0 && new_balance_bus > 0) {
                 // you can take the bus (there is bus route/
                 // hp allows it /balance allows it)
-                result.add(new balance_hp_entry_time_operation(new_balance_bus, this.spent_money + (this.balance - new_balance_bus), new_hp_bus, entry.getKey(), new_time_bus, "bus"));
+                result.add(new balance_hp_entry_time_operation(new_balance_bus, this.spent_money + (this.balance - new_balance_bus), this.HP - new_hp_bus, new_hp_bus, entry.getKey(), new_time_bus, "bus"));
             }
 
             if (e.taxi_route && new_hp_taxi > 0 && new_balance_taxi > 0) {
                 // you can take a taxi (there is taxi route/
                 // hp allows it / balance allows it)
-                result.add(new balance_hp_entry_time_operation(new_balance_taxi, this.spent_money + (this.balance - new_balance_taxi), new_hp_taxi, entry.getKey(), new_time_taxi, "taxi"));
+                result.add(new balance_hp_entry_time_operation(new_balance_taxi, this.spent_money + (this.balance - new_balance_taxi), this.HP - new_hp_taxi, new_hp_taxi, entry.getKey(), new_time_taxi, "taxi"));
             }
         }
         return result;
@@ -81,7 +83,7 @@ public class State implements Comparable<State>{
         ArrayList<balance_hp_entry_time_operation> moves = checkMoves();
         ArrayList<State> result = new ArrayList<>();
         for (balance_hp_entry_time_operation move : moves){
-            result.add(this.move(move.balance, move.spent_money, move.hp, move.entry, move.time, move.operation));
+            result.add(this.move(move.balance, move.spent_money, move.spent_HP, move.hp, move.entry, move.time, move.operation));
         }
         return result;
     }
@@ -143,14 +145,16 @@ public class State implements Comparable<State>{
         double time;
         String operation;
         double spent_money;
+        double spent_HP;
 
-        public balance_hp_entry_time_operation(double balance, double spent_money, double hp,String entry, double time, String operation){
+        public balance_hp_entry_time_operation(double balance, double spent_money, double spent_HP, double hp,String entry, double time, String operation){
             this.entry = entry;
             this.balance = balance;
             this.hp = hp;
             this.time = time;
             this.operation = operation;
             this.spent_money = spent_money;
+            this.spent_HP = spent_HP;
         }
 
         public String toString(){
@@ -168,8 +172,8 @@ public class State implements Comparable<State>{
         return currentStation.equals(finalState);
     }
 
-    public State move(double balance, double spent_money, double HP, String station, double time, String operation){
-        return new State(this, balance, spent_money, HP, station, time, operation);
+    public State move(double balance, double spent_money, double spent_HP, double HP, String station, double time, String operation){
+        return new State(this, balance, spent_money, spent_HP, HP, station, time, operation);
     }
 
     public String toString(){
