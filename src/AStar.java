@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -10,8 +11,14 @@ public class Astar {
 
 
     public Astar(String algorithm, State s){
-        this.q = new PriorityQueue<State>();
         this.algorithm = algorithm;
+
+        if (this.algorithm.equals("maxHp")){
+            this.q = new PriorityQueue<State>(Collections.reverseOrder());
+        }
+        else{
+            this.q = new PriorityQueue<State>();
+        }
         this.s = s;
 
         for (Map.Entry<String, Double[]> entry : State.stations.entrySet()){    //initialize the distance array
@@ -73,13 +80,11 @@ public class Astar {
         if(algorithm.equals("fastestTime")){
             return state.time;
         }else if(algorithm.equals("leastCost")){
-
+            return state.spent_money;
         }else if(algorithm.equals("maxHp")){
-
-        }else{
-
+            return state.HP;
         }
-        return 0;
+        return 0.0;
     }
 }
 
