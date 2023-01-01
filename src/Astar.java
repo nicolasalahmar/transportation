@@ -15,6 +15,13 @@ public class Astar {
         this.algorithm = algorithm;
         this.q = new PriorityQueue<>();
 
+        if (this.algorithm.equals("maxHp")){
+            this.q = new PriorityQueue<>(Collections.reverseOrder());
+        }
+        else{
+            this.q = new PriorityQueue<>();
+        }
+
         this.s = s;
         this.m=0;
         this.n=0;
