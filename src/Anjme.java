@@ -14,7 +14,7 @@ public class Anjme {
         this.algorithm = algorithm;
         this.s = s;
 
-        for (Map.Entry<String, Double[]> entry : State.stations.entrySet()){
+        for (Map.Entry<String, Double[]> entry : State.stations.entrySet()){    //initialize the distance array
             this.dist.put(entry.getKey(), 99999999.9);
         }
     }
@@ -39,7 +39,7 @@ public class Anjme {
          
                 for (State child : current_state.getNextStates()){
                     // edge = State.edges.get(current_state.currentStation).get(child.currentStation).distance;
-                    child.cost = child.time;
+                    child.cost = cost(child, algorithm);
                     child.total_cost = child.cost + heuristic(child, algorithm);
 
                     w = child.cost - child.parent.cost;
@@ -67,9 +67,6 @@ public class Anjme {
 
         }
         else{} return 0;
-
-
-
     }
 
     public double cost(State state,String algorithm){
@@ -85,6 +82,5 @@ public class Anjme {
         }
         return 0;
     }
-
 }
 
