@@ -8,7 +8,7 @@ public class Main {
         //this.stations.put(station name, [bus waiting time, taxi waiting time])
         Main.func();
 
-        Anjme a = new Anjme("fastestTime", s);
+        Astar a = new Astar("fastestTime", s);
         State t = a.search();
         t.printPath();
         // t.printPath();

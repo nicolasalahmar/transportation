@@ -1,65 +1,71 @@
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.PriorityQueue;
 
-public class AStar {
-
-    State state;
+public class Astar {
+    PriorityQueue<State> q;
+    HashMap<String, Double> dist = new HashMap<>();
+    State s;
     String algorithm;
 
-    public AStar(State state,String algorithm){
-        this.state = state;
+
+    public Astar(String algorithm, State s){
+        this.q = new PriorityQueue<State>();
         this.algorithm = algorithm;
+        this.s = s;
+
+        for (Map.Entry<String, Double[]> entry : State.stations.entrySet()){    //initialize the distance array
+            this.dist.put(entry.getKey(), 99999999.9);
+        }
     }
 
+    public State search(){
+        s.total_cost = 0.0;
+        s.cost = 0.0;
+        this.dist.put( s.currentStation, 0.0);
+        this.q.add(s);
+        State current_state;
+        double w;
 
-    public State aStar(){
+         while(!q.isEmpty()){
+            current_state = q.poll();
 
-        ArrayList<State> queue = new ArrayList<State>();
-        ArrayList<State> visited = new ArrayList<State>();
-
-        state.cost = cost(state,algorithm);
-        queue.add(state);
-
-        
-        while(true){
-            if(queue.isEmpty()){
-                System.out.println("No solution found");
-                break;
-            }
-            
-            State node = leastCost(queue);
-
-            queue.remove(node);
-            
-            if(node.isFinal()){
-                System.out.println("Final");
-                return node;
+            if (current_state.isFinal()){
+                return current_state;
             }
 
-            visited.add(node);
-            ArrayList<State> children = node.getNextStates();
+            if (current_state.cost > this.dist.get(current_state.currentStation))
+                continue;
+         
+                for (State child : current_state.getNextStates()){
+                    child.cost = cost(child, algorithm);
+                    child.total_cost = child.cost + heuristic(child, algorithm);
 
-            for (State child : children){
-                child.cost=cost(child,algorithm);
-
-                if(!inArrayList(queue, child) && !inArrayList(visited, child)){
-                    queue.add(child);
-                    child.parent = node;
-
-                }else if(inArrayList(queue, child) && child.cost>node.cost+State.edges.get(node.currentStation).get(child.currentStation).distance){
-                    child.cost=node.cost+State.edges.get(node.currentStation).get(child.currentStation).distance;
-                    child.total_cost = child.cost+heuristic(child,algorithm);
-                    child.parent = node;
-
-                }else if(inArrayList(visited, child) && child.cost>node.cost+State.edges.get(node.currentStation).get(child.currentStation).distance){
-                    child.cost=node.cost+State.edges.get(node.currentStation).get(child.currentStation).distance;
-                    child.total_cost = child.cost+heuristic(child,algorithm);
-                    child.parent = node;
-
-                }
-            }
-            
+                    w = child.cost - child.parent.cost;
+                    if (current_state.cost + w  < this.dist.get(child.currentStation)){
+                        this.dist.put(child.currentStation, current_state.total_cost + w);
+                        q.add(child);
+                    }
+                 }
         }
         return null;
+    }
+
+    public double heuristic(State state,String algorithm){
+        if (state.isFinal()){
+            return 0.0;
+        }
+        if(algorithm.equals("fastestTime")){
+            return State.edges.get(state.currentStation).get(State.finalState).distance;
+
+        }else if(algorithm.equals("leastCost")){
+
+
+        }else if(algorithm.equals("maxHp")){
+
+
+        }
+        else{} return 0;
     }
 
     public double cost(State state,String algorithm){
@@ -75,46 +81,5 @@ public class AStar {
         }
         return 0;
     }
-
-    public State leastCost(ArrayList<State> states){
-        State temp = states.get(0);
-
-        for(State s :states){
-            if(s.total_cost<temp.total_cost){
-                temp=s;
-            }
-        }
-        return temp;
-    }
-
-    public boolean inArrayList(ArrayList<State>list,State state){
-        if(list.size()<1){
-            return false;
-        }
-        for(State s : list){
-            if(s.currentStation.equals(state.currentStation)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public double heuristic(State state,String algorithm){
-        if(algorithm.equals("fastestTime")){
-            return State.edges.get(state.currentStation).get(State.finalState).distance;
-
-        }else if(algorithm.equals("leastCost")){
-
-
-        }else if(algorithm.equals("maxHp")){
-
-
-        }
-        else{} return 0;
-
-
-
-    }
-
-
 }
+
