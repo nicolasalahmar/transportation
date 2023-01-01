@@ -11,7 +11,7 @@ public class Main {
 
         Anjme a = new Anjme("fastestTime", s);
         State t = a.search();
-        System.out.println(t);
+        t.printPath();
         // t.printPath();
 
         // System.out.println(State.edges.get(s.currentStation));
@@ -56,7 +56,7 @@ public class Main {
         temp2.put("Hamak", new Edge(5, false, false, 40, 50, "Bab sharqui - Hamak"));
         temp2.put("Bab Touma", new Edge(3, false, true, 40, 50, "Bab sharqui - Bab Touma"));
         temp2.put("Abbasyian", new Edge(5, false, true, 40, 50, "Bab sharqui - Abbasyian"));
-        temp2.put("Kassaa", new Edge(6, false, false, 40, 50, "Bab sharqui - Kassaa"));
+        temp2.put("Kassaa", new Edge(12, false, false, 40, 50, "Bab sharqui - Kassaa"));
 
         State.edges.put("Bab sharqui", temp2);
 
@@ -87,7 +87,7 @@ public class Main {
         Map<String, Edge>temp5 = new HashMap<>();
 
         temp5.put("Hamak", new Edge(12, false, false, 40, 50, "Kassaa - Hamak"));
-        temp5.put("Bab sharqui", new Edge(6, false, false, 40, 50, "Kassaa - bab sharqui"));
+        temp5.put("Bab sharqui", new Edge(12, false, false, 40, 50, "Kassaa - bab sharqui"));
         temp5.put("Bab Touma", new Edge(10, false, false, 40, 50, "Kassaa - Bab Touma"));
         temp5.put("Abbasyian", new Edge(1, false, false, 40, 50, "Kassaa - Abbasyian"));
 
