@@ -4,11 +4,11 @@ import java.util.Map;
 public class Main {
 
     public static void main(String[] args) {
-        State s = new State(null,10000, 0, 100, "Hamak", 0, "");
+        State s = new State(null,10000, 0, 0,100, "Hamak", 0, "");
         //this.stations.put(station name, [bus waiting time, taxi waiting time])
         Main.func();
 
-        Astar a = new Astar("fastestTime", s);
+        Astar a = new Astar("leastCost", s);
 
         double start = System.nanoTime();
         State t = a.search();
@@ -19,7 +19,6 @@ public class Main {
         System.out.println("number of nodes processed: "+a.m);
         System.out.println("number of nodes instantiated: "+a.n);
         System.out.println("time of execution: "+((finish - start)/1000000)+" ms");
-
         // t.printPath();
 
         // System.out.println(State.edges.get(s.currentStation));
