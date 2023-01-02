@@ -8,7 +8,7 @@ public class Main {
         //this.stations.put(station name, [bus waiting time, taxi waiting time])
         Main.func();
 
-        Astar a = new Astar("leastCost", s);
+        Astar a = new Astar("maxHp", s);
 
         double start = System.nanoTime();
         State t = a.search();
@@ -22,11 +22,11 @@ public class Main {
     }
 
     public static void func() {
-       State.stations.put("Hamak", new Double[]{ 0.2, 0.1});
-       State.stations.put("Bab Touma", new Double[]{ 0.3, 0.2});
-       State.stations.put("Bab sharqui", new Double[]{ 0.4,0.5});
-       State.stations.put("Abbasyian", new Double[]{ 0.5, 0.6});
-       State.stations.put("Kassaa", new Double[]{ 0.4, 0.3});
+       State.stations.put("Hamak", new Double[]{ 0.2, 0.2});
+       State.stations.put("Bab Touma", new Double[]{ 0.2, 0.2});
+       State.stations.put("Bab sharqui", new Double[]{ 0.2,0.2});
+       State.stations.put("Abbasyian", new Double[]{ 0.0, 0.0});
+       State.stations.put("Kassaa", new Double[]{ 0.2, 0.02});
 
        State.walking_speed = 5.5;
        State.bus_fee = 400;
@@ -77,7 +77,7 @@ public class Main {
        temp4.put("Hamak", new Edge(9, false, false, 40, 50, "Abbasyian - Hamak"));
        temp4.put("Bab sharqui", new Edge(5, true, false, 40, 50, "Abbasyian - bab sharqui"));
        temp4.put("Bab Touma", new Edge(2, false, false, 40, 50, "Abbasyian - Bab Touma"));
-       temp4.put("Kassaa", new Edge(1, false, false, 40, 50, "Abbasyian - Kassaa"));
+       temp4.put("Kassaa", new Edge(1, false, true, 40, 50, "Abbasyian - Kassaa"));
 
        State.edges.put("Abbasyian", temp4);
 
@@ -87,7 +87,7 @@ public class Main {
        temp5.put("Hamak", new Edge(12, false, false, 40, 50, "Kassaa - Hamak"));
        temp5.put("Bab sharqui", new Edge(12, false, false, 40, 50, "Kassaa - bab sharqui"));
        temp5.put("Bab Touma", new Edge(10, false, false, 40, 50, "Kassaa - Bab Touma"));
-       temp5.put("Abbasyian", new Edge(1, false, false, 40, 50, "Kassaa - Abbasyian"));
+       temp5.put("Abbasyian", new Edge(1, false, true, 40, 50, "Kassaa - Abbasyian"));
 
        State.edges.put("Kassaa", temp5);
     }
