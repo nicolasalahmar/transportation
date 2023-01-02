@@ -6,6 +6,7 @@ public class Astar {
     HashMap<String, Double> balance_dist = new HashMap<>();
     HashMap<String, Double> hp_dist = new HashMap<>();
     HashMap<String, Double> time_dist = new HashMap<>();
+    Set<State> visited = new HashSet<State>();
     State s;
     String algorithm;
     int n,m;
@@ -40,6 +41,7 @@ public class Astar {
         this.hp_dist.put( s.currentStation, 0.0);
         this.time_dist.put( s.currentStation, 0.0);
         this.q.add(s);
+        this.visited.add(s);
         State current_state;
 
          while(!q.isEmpty()){
@@ -59,9 +61,11 @@ public class Astar {
                  child.total_cost = child.cost + heuristic(child, algorithm);
                  this.n++;
 
-                 if (child.spent_HP < this.hp_dist.get(child.currentStation)
-                         || child.spent_money < this.balance_dist.get(child.currentStation)
-                         || child.time < this.time_dist.get(child.currentStation)) {
+                 if ((child.spent_HP < this.hp_dist.get(child.currentStation)
+                  || child.spent_money < this.balance_dist.get(child.currentStation)
+                  || child.time < this.time_dist.get(child.currentStation))
+                  && !visited.contains(child)
+                  ) {
 
 //                     if (child.spent_HP < this.hp_dist.get(child.currentStation))//todo figure out why these ifs are not working
                          this.hp_dist.put(child.currentStation, child.spent_HP);
@@ -70,6 +74,7 @@ public class Astar {
 //                     if (child.time < this.time_dist.get(child.currentStation))
                         this.time_dist.put(child.currentStation, child.time);
                      q.add(child);
+                     visited.add(child);
                  }
              }
          }
@@ -85,9 +90,9 @@ public class Astar {
         }else if(algorithm.equals("leastCost")){
             return State.edges.get(state.currentStation).get(State.finalState).distance;
         }else if(algorithm.equals("maxHp")){
-
+            return State.edges.get(state.currentStation).get(State.finalState).distance;
         }
-        else{} return 0;
+            return 0.0;
     }
 
     public double cost(State state,String algorithm){
