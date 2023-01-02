@@ -185,10 +185,15 @@ public class State implements Comparable<State>{
     }
 
     public void printPath(){
+        ArrayList<State> arr = new ArrayList<>();
         State temp = this;
         while (temp!=null){
-            System.out.println(temp);
+            // System.out.println(temp);
+            arr.add(0, temp);
             temp = temp.parent;
+        }
+        for (State s : arr){
+            s.printState();
         }
     }
 
