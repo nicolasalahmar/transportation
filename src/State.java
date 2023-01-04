@@ -228,7 +228,7 @@ public class State implements Comparable<State>{
     }
 
     public String toString(){
-        return "station: "+this.currentStation + "\nHP: "+this.HP+"\nBalance: "+this.balance+"\ntime: "+this.time+"\nOperation: "+this.operation +"\nspent HP: "+this.spent_HP+"\n";
+        return "station: "+this.currentStation + "\nHP: "+this.HP+"\nBalance: "+this.balance+"\ntime: "+this.time+"\nOperation: "+this.operation+"\n";
     }
 
     public void printState(){
