@@ -16,12 +16,12 @@ public class Astar {
         this.algorithm = algorithm;
         this.q = new PriorityQueue<>();
 
-        if (this.algorithm.equals("maxHp")){
-            this.q = new PriorityQueue<>(Collections.reverseOrder());
-        }
-        else{
-            this.q = new PriorityQueue<>();
-        }
+        // if (this.algorithm.equals("maxHp")){
+        //     this.q = new PriorityQueue<>(Collections.reverseOrder());
+        // }
+        // else{
+        //     this.q = new PriorityQueue<>();
+        // }
 
         this.s = s;
         this.m=0;
@@ -101,7 +101,7 @@ public class Astar {
         }else if(algorithm.equals("leastCost")){
             return state.spent_money;
         }else if(algorithm.equals("maxHp")){
-            return state.HP;
+            return state.spent_HP;
         }
         return 0.0;
     }

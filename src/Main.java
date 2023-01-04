@@ -8,7 +8,7 @@ public class Main {
         //this.stations.put(station name, [bus waiting time, taxi waiting time])
         Main.func();
 
-        Astar a = new Astar("maxHp", s);
+        Astar a = new Astar("fastestTime", s);
 
         double start = System.nanoTime();
         State t = a.search();
