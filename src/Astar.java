@@ -12,16 +12,16 @@ public class Astar {
     int n,m;
 
 
-    public Astar(String algorithm, State s){
+    public Astar(String algorithm,String order, State s){
         this.algorithm = algorithm;
         this.q = new PriorityQueue<>();
 
-        // if (this.algorithm.equals("maxHp")){
-        //     this.q = new PriorityQueue<>(Collections.reverseOrder());
-        // }
-        // else{
-        //     this.q = new PriorityQueue<>();
-        // }
+        if (order.equals("descending")){
+            this.q = new PriorityQueue<>(Collections.reverseOrder());
+        }
+        else{
+            this.q = new PriorityQueue<>();
+        }
 
         this.s = s;
         this.m=0;
