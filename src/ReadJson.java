@@ -18,10 +18,10 @@ public class ReadJson {
             JSONObject state = (JSONObject) jsonObject.get("state");
             State parent = (State) state.get("parent");
             double balance = ((Number) state.get("balance")).doubleValue();
-            double spent_money = ((Number) state.get("spent_money")).doubleValue(); //spent_money will be 0 in the beginning so you can enter it as 0 in the constructor because we will only read from json in the beginning of execution
+            double spent_money = ((Number) state.get("spent_money")).doubleValue();
             double HP = ((Number) state.get("HP")).doubleValue();
             String currentStation = (String) state.get("currentStation");
-            double time = ((Number) state.get("time")).doubleValue();   //time will be 0 in the beginning so you can enter it as 0 in the constructor
+            double time = ((Number) state.get("time")).doubleValue();
             String operation = (String) state.get("operation");
 
             State.walking_speed =((Number) state.get("walking_speed")).doubleValue();
@@ -32,7 +32,7 @@ public class ReadJson {
             State.taxi_energy_cost = ((Number) state.get("taxi_energy_cost")).doubleValue();
             State.walking_energy_cost =((Number) state.get("walking_energy_cost")).doubleValue();
             State.finalState = (String) state.get("finalState");
-            s = new State(parent, balance, spent_money, 0,  HP, currentStation, time, operation);   // i added spent_HP in the state constructor so i added it here
+            s = new State(parent, balance, spent_money, 0,  HP, currentStation, time, operation);
             JSONObject stations = (JSONObject) jsonObject.get("stations");
             JSONObject edges = (JSONObject) jsonObject.get("edges");
             Set keySet1 = edges.keySet();
