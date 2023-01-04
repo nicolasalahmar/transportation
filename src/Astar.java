@@ -66,7 +66,7 @@ public class Astar {
              ArrayList<State> temp = current_state.getNextStates();
              for (State child : temp) {
                  child.cost = cost(child, algorithm);
-                 child.total_cost = child.cost + heuristic(child);
+                 child.total_cost = child.cost + heuristic(child, algorithm);
                  Astar.n++;
 
                  if (((child.spent_HP < Astar.hp_dist.get(child.currentStation))
@@ -85,7 +85,7 @@ public class Astar {
         return null;
     }
 
-    public static double heuristic(State state){
+    public static double heuristic(State state, String algorithm){
         if (state.isFinal()){
             return 0.0;
         }
@@ -101,9 +101,18 @@ public class Astar {
         double final_dist = State.edges.get(state.currentStation).get(State.finalState).distance;
         for(Double d : arr){
             if (final_dist == d){
-                return i/arr.size() * 0.1;
+                break;
             }
             i++;
+        }
+        if (algorithm.equals("fastestTime")){
+            return i * 0.01;
+        }else if (algorithm.equals("leastCost")){
+            return i;
+        }else if (algorithm.equals("maxHp")){
+            return i;
+        }else if (algorithm.equals("allCosts")){
+            return i * 0.1;
         }
         return 0.0;
     }
