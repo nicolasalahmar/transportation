@@ -6,14 +6,14 @@ public class Main {
     public static void main(String[] args) {
         State s = new State(null,10000, 0, 0,100, "Hamak", 0, "");
         Main.func();
-        fastestTime(s, "descending");
+        fastestTime(s);
         // Astar a = new Astar("allCosts","ascending", s);
         // State t = a.search();
         // System.out.println(State.best_values);
     }
 
-    public static void leastCost(State s, String order){
-        Astar a = new Astar("leastCost",order, s);
+    public static void leastCost(State s){
+        Astar a = new Astar("leastCost", s);
 
         State t = a.t;
 
@@ -24,8 +24,8 @@ public class Main {
         System.out.println("time of execution: "+((Astar.finish - Astar.start)/1000000)+" ms");
     }
 
-    public static void fastestTime(State s, String order){
-        Astar a = new Astar("fastestTime",order, s);
+    public static void fastestTime(State s){
+        Astar a = new Astar("fastestTime", s);
 
         State t = a.t;
 
@@ -36,8 +36,8 @@ public class Main {
         System.out.println("time of execution: "+((Astar.finish - Astar.start)/1000000)+" ms");
     }
     
-    public static void maxHp(State s, String order){
-        Astar a = new Astar("maxHp",order, s);
+    public static void maxHp(State s){
+        Astar a = new Astar("maxHp", s);
 
         State t = a.t;
 
@@ -48,8 +48,8 @@ public class Main {
         System.out.println("time of execution: "+((Astar.finish - Astar.start)/1000000)+" ms");
     }
 
-    public static void allCosts(State s, String order){
-        Astar a = new Astar("allCosts",order, s);
+    public static void allCosts(State s){
+        Astar a = new Astar("allCosts", s);
 
         State t = a.t;
 
