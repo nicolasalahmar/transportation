@@ -4,13 +4,11 @@ import java.util.Map;
 public class Main {
 
     public static void main(String[] args) {
-        // State s = new State(null,10000, 0, 0,100, "Hamak", 0, "");
-        // Main.func();
         ReadJson json = new ReadJson();
         json.read();
         State s = json.s;
 
-        fastestTime(s);
+        leastCost(s);
     }
 
     public static void leastCost(State s){

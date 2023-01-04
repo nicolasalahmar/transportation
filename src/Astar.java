@@ -101,7 +101,7 @@ public class Astar {
         double final_dist = State.edges.get(state.currentStation).get(State.finalState).distance;
         for(Double d : arr){
             if (final_dist == d){
-                return i/arr.size();
+                return i/arr.size() * 0.1;
             }
             i++;
         }

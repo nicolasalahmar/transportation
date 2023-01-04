@@ -13,7 +13,6 @@ public class State implements Comparable<State>{
     String operation;
     double cost;
     double total_cost;
-    double normal;
 
 
     static double walking_speed;
@@ -26,8 +25,6 @@ public class State implements Comparable<State>{
     static Map<String, Map<String, Edge>> edges = new HashMap<>();
     static Map<String, Double[]> stations = new HashMap<>();
     static String finalState;
-    static Map<String, Double> best_values = new HashMap<>();
-    static Map<String, Double> ranges = new HashMap<>();
 
 
     public State(State parent, double balance, double spent_money, double spent_HP, double HP, String currentStation, double time, String operation) {
@@ -43,52 +40,21 @@ public class State implements Comparable<State>{
         this.total_cost = 0;
     }
 
-    // public static void fill_best_values_and_ranges(State s){
-    //     State temp1 = new State(s.parent, s.balance, s.spent_money, s.spent_HP, s.HP, s.currentStation, s.time, s.operation);
-    //     State temp2 = new State(s.parent, s.balance, s.spent_money, s.spent_HP, s.HP, s.currentStation, s.time, s.operation);
-    //     State temp3 = new State(s.parent, s.balance, s.spent_money, s.spent_HP, s.HP, s.currentStation, s.time, s.operation);
-    //     State temp4 = new State(s.parent, s.balance, s.spent_money, s.spent_HP, s.HP, s.currentStation, s.time, s.operation);
-    //     State temp5 = new State(s.parent, s.balance, s.spent_money, s.spent_HP, s.HP, s.currentStation, s.time, s.operation);
-    //     State temp6 = new State(s.parent, s.balance, s.spent_money, s.spent_HP, s.HP, s.currentStation, s.time, s.operation);
-    //     Double best, worst;
+    public double normalize(){
+        double normalized_balance = spent_money/(spent_money + balance);
+        double normalized_HP = spent_HP/100;
+        double normalized_time = time/worst_time_walking();
 
+        return normalized_HP + normalized_balance + normalized_time;
+    }
 
-    //     Astar a = new Astar("fastestTime", "ascending", temp1);
-    //     best = a.search().time;
-    //     State.best_values.put("best_time", best);
-
-    //     a = new Astar("fastestTime", "descending", temp2);
-    //     worst = a.search().time;
-    //     State.best_values.put("worst_time", worst);
-    //     State.ranges.put("time_range", worst - best);
-
-
-
-
-
-    //     a = new Astar("leastCost", "ascending", temp3);
-    //     best = a.search().balance;
-    //     State.best_values.put("best_cost", best);
-
-    //     a = new Astar("leastCost", "descending", temp4);
-    //     worst = a.search().balance;
-    //     State.best_values.put("worst_cost", worst);
-    //     State.ranges.put("cost_range", best - worst);
-
-
-
-
-
-
-    //     a = new Astar("maxHp", "ascending", temp5);
-    //     best = a.search().HP;
-    //     State.best_values.put("best_HP", best);
-
-    //     a = new Astar("maxHp", "descending", temp6);
-    //     worst = a.search().HP;
-    //     State.best_values.put("worst_HP", worst);
-    //     State.ranges.put("HP_range", best - worst);
-    // }
+    public double worst_time_walking(){
+        if(this.isFinal()){
+            return 99999999;
+        }
+        double distance = State.edges.get(this.currentStation).get(State.finalState).distance;
+        return distance / State.walking_speed;
+    }
 
     public ArrayList<balance_hp_entry_time_operation> checkMoves() {
         Map<String, Edge> moves = State.edges.get(currentStation);
