@@ -13,6 +13,7 @@ public class State implements Comparable<State>{
     String operation;
     double cost;
     double total_cost;
+    double normal;
 
 
     static double walking_speed;
@@ -22,9 +23,12 @@ public class State implements Comparable<State>{
     static double bus_energy_cost;
     static double taxi_energy_cost;
     static double walking_energy_cost;
-    static Map<String, Map<String, Edge>> edges = new HashMap<>();;
-    static Map<String, Double[]> stations = new HashMap<>(); // i think float instead of Float will make some problems
+    static Map<String, Map<String, Edge>> edges = new HashMap<>();
+    static Map<String, Double[]> stations = new HashMap<>();
     static String finalState;
+    static Map<String, Double> best_values = new HashMap<>();
+    static Map<String, Double> ranges = new HashMap<>();
+
 
     public State(State parent, double balance, double spent_money, double spent_HP, double HP, String currentStation, double time, String operation) {
         this.parent = parent;
@@ -38,6 +42,53 @@ public class State implements Comparable<State>{
         this.cost = 0;
         this.total_cost = 0;
     }
+
+    // public static void fill_best_values_and_ranges(State s){
+    //     State temp1 = new State(s.parent, s.balance, s.spent_money, s.spent_HP, s.HP, s.currentStation, s.time, s.operation);
+    //     State temp2 = new State(s.parent, s.balance, s.spent_money, s.spent_HP, s.HP, s.currentStation, s.time, s.operation);
+    //     State temp3 = new State(s.parent, s.balance, s.spent_money, s.spent_HP, s.HP, s.currentStation, s.time, s.operation);
+    //     State temp4 = new State(s.parent, s.balance, s.spent_money, s.spent_HP, s.HP, s.currentStation, s.time, s.operation);
+    //     State temp5 = new State(s.parent, s.balance, s.spent_money, s.spent_HP, s.HP, s.currentStation, s.time, s.operation);
+    //     State temp6 = new State(s.parent, s.balance, s.spent_money, s.spent_HP, s.HP, s.currentStation, s.time, s.operation);
+    //     Double best, worst;
+
+
+    //     Astar a = new Astar("fastestTime", "ascending", temp1);
+    //     best = a.search().time;
+    //     State.best_values.put("best_time", best);
+
+    //     a = new Astar("fastestTime", "descending", temp2);
+    //     worst = a.search().time;
+    //     State.best_values.put("worst_time", worst);
+    //     State.ranges.put("time_range", worst - best);
+
+
+
+
+
+    //     a = new Astar("leastCost", "ascending", temp3);
+    //     best = a.search().balance;
+    //     State.best_values.put("best_cost", best);
+
+    //     a = new Astar("leastCost", "descending", temp4);
+    //     worst = a.search().balance;
+    //     State.best_values.put("worst_cost", worst);
+    //     State.ranges.put("cost_range", best - worst);
+
+
+
+
+
+
+    //     a = new Astar("maxHp", "ascending", temp5);
+    //     best = a.search().HP;
+    //     State.best_values.put("best_HP", best);
+
+    //     a = new Astar("maxHp", "descending", temp6);
+    //     worst = a.search().HP;
+    //     State.best_values.put("worst_HP", worst);
+    //     State.ranges.put("HP_range", best - worst);
+    // }
 
     public ArrayList<balance_hp_entry_time_operation> checkMoves() {
         Map<String, Edge> moves = State.edges.get(currentStation);
@@ -60,20 +111,20 @@ public class State implements Comparable<State>{
             new_balance_taxi = this.calc_balance(this.balance, e.distance, "taxi");
             new_time_taxi = this.calc_time(e.distance, e.taxi_speed, "taxi");
 
-            if (new_hp_walking > 0 && new_balance_walking > 0) {// you can walk (hp allows it /balance allows it))
-                result.add(new balance_hp_entry_time_operation(new_balance_walking, this.spent_money + (this.balance - new_balance_walking), this.HP - new_hp_walking, new_hp_walking, entry.getKey(), new_time_walking, "walking"));
+            if (new_hp_walking > 0 && new_balance_walking >= 0) {// you can walk (hp allows it /balance allows it))
+                result.add(new balance_hp_entry_time_operation(new_balance_walking, this.spent_money + (this.balance - new_balance_walking), this.spent_HP + (this.HP - new_hp_walking), new_hp_walking, entry.getKey(), new_time_walking, "walking"));
             }
 
-            if (e.bus_route && new_hp_bus > 0 && new_balance_bus > 0) {
+            if (e.bus_route && new_hp_bus > 0 && new_balance_bus >= 0) {
                 // you can take the bus (there is bus route/
                 // hp allows it /balance allows it)
-                result.add(new balance_hp_entry_time_operation(new_balance_bus, this.spent_money + (this.balance - new_balance_bus), this.HP - new_hp_bus, new_hp_bus, entry.getKey(), new_time_bus, "bus"));
+                result.add(new balance_hp_entry_time_operation(new_balance_bus, this.spent_money + (this.balance - new_balance_bus), this.spent_HP + (this.HP - new_hp_bus), new_hp_bus, entry.getKey(), new_time_bus, "bus"));
             }
 
-            if (e.taxi_route && new_hp_taxi > 0 && new_balance_taxi > 0) {
+            if (e.taxi_route && new_hp_taxi > 0 && new_balance_taxi >= 0) {
                 // you can take a taxi (there is taxi route/
                 // hp allows it / balance allows it)
-                result.add(new balance_hp_entry_time_operation(new_balance_taxi, this.spent_money + (this.balance - new_balance_taxi), this.HP - new_hp_taxi, new_hp_taxi, entry.getKey(), new_time_taxi, "taxi"));
+                result.add(new balance_hp_entry_time_operation(new_balance_taxi, this.spent_money + (this.balance - new_balance_taxi), this.spent_HP + (this.HP - new_hp_taxi), new_hp_taxi, entry.getKey(), new_time_taxi, "taxi"));
             }
         }
         return result;
@@ -177,7 +228,7 @@ public class State implements Comparable<State>{
     }
 
     public String toString(){
-        return "station: "+this.currentStation + "\nHP: "+this.HP+"\nBalance: "+this.balance+"\ntime: "+this.time+"\nOperation: "+this.operation+"\n";
+        return "station: "+this.currentStation + "\nHP: "+this.HP+"\nBalance: "+this.balance+"\ntime: "+this.time+"\nOperation: "+this.operation +"\nspent HP: "+this.spent_HP+"\n";
     }
 
     public void printState(){
