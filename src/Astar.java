@@ -2,100 +2,113 @@ import java.util.*;
 
 
 public class Astar {
-    PriorityQueue<State> q;
-    HashMap<String, Double> balance_dist = new HashMap<>();
-    HashMap<String, Double> hp_dist = new HashMap<>();
-    HashMap<String, Double> time_dist = new HashMap<>();
-    Set<State> visited = new HashSet<State>();
-    State s;
+    static PriorityQueue<State> q;
+    static HashMap<String, Double> balance_dist;
+    static HashMap<String, Double> hp_dist;
+    static HashMap<String, Double> time_dist;
+    static Set<State> visited;
+    static State s;
+    State t;
     String algorithm;
-    int n,m;
+    static int n,m;
+    static double start, finish;
 
+    public Astar(String algorithm, State s){
+        balance_dist = new HashMap<>();
+        hp_dist = new HashMap<>();
+        time_dist = new HashMap<>();
+        visited = new HashSet<State>();
+        q = new PriorityQueue<>();
 
-    public Astar(String algorithm,String order, State s){
         this.algorithm = algorithm;
-        this.q = new PriorityQueue<>();
 
-        if (order.equals("descending")){
-            this.q = new PriorityQueue<>(Collections.reverseOrder());
-        }
-        else{
-            this.q = new PriorityQueue<>();
-        }
+        Astar.s = s;
+        Astar.m=0;
+        Astar.n=0;
 
-        this.s = s;
-        this.m=0;
-        this.n=0;
-
+        q = new PriorityQueue<>();
         for (Map.Entry<String, Double[]> entry : State.stations.entrySet()){    //initialize the distance array
-            this.balance_dist.put(entry.getKey(), 99999999.9);
-            this.hp_dist.put(entry.getKey(), 99999999.9);
-            this.time_dist.put(entry.getKey(), 99999999.9);
+            balance_dist.put(entry.getKey(), 99999999.9);
+            hp_dist.put(entry.getKey(), 99999999.9);
+            time_dist.put(entry.getKey(), 99999999.9);
         }
+        t = Astar.search(algorithm);
+
     }
 
-    public State search(){
+    public static State search(String algorithm){
+        start= System.nanoTime();
         s.total_cost = 0.0;
         s.cost = 0.0;
-        this.balance_dist.put( s.currentStation, 0.0);
-        this.hp_dist.put( s.currentStation, 0.0);
-        this.time_dist.put( s.currentStation, 0.0);
-        this.q.add(s);
-        this.visited.add(s);
+        Astar.balance_dist.put( s.currentStation, 0.0);
+        Astar.hp_dist.put( s.currentStation, 0.0);
+        Astar.time_dist.put( s.currentStation, 0.0);
+        Astar.q.add(s);
+        Astar.visited.add(s);
         State current_state;
 
          while(!q.isEmpty()){
             current_state = q.poll();
 
-            this.m++;
+            Astar.m++;
 
             if (current_state.isFinal()){
+                finish = System.nanoTime();
                 return current_state;
             }
 
-             if (current_state.cost > this.balance_dist.get(current_state.currentStation))
-                 continue;
+            if ((current_state.spent_money > Astar.balance_dist.get(current_state.currentStation)) &&
+            (current_state.spent_HP > Astar.hp_dist.get(current_state.currentStation)) &&
+            (current_state.time > Astar.time_dist.get(current_state.currentStation))
+            )
+                continue;
+
              ArrayList<State> temp = current_state.getNextStates();
              for (State child : temp) {
                  child.cost = cost(child, algorithm);
                  child.total_cost = child.cost + heuristic(child, algorithm);
-                 this.n++;
+                 Astar.n++;
 
-                 if ((child.spent_HP < this.hp_dist.get(child.currentStation)
-                  || child.spent_money < this.balance_dist.get(child.currentStation)
-                  || child.time < this.time_dist.get(child.currentStation))
+                 if (((child.spent_HP < Astar.hp_dist.get(child.currentStation))
+                  || (child.spent_money < Astar.balance_dist.get(child.currentStation))
+                  || (child.time < Astar.time_dist.get(child.currentStation)))
                   && !visited.contains(child)
                   ) {
-
-//                     if (child.spent_HP < this.hp_dist.get(child.currentStation))//todo figure out why these ifs are not working
-                         this.hp_dist.put(child.currentStation, child.spent_HP);
-//                     if (child.spent_money < this.balance_dist.get(child.currentStation))
-                         this.balance_dist.put(child.currentStation, child.spent_money);
-//                     if (child.time < this.time_dist.get(child.currentStation))
-                        this.time_dist.put(child.currentStation, child.time);
-                     q.add(child);
-                     visited.add(child);
+                    Astar.hp_dist.put(child.currentStation, child.spent_HP);
+                    Astar.balance_dist.put(child.currentStation, child.spent_money);
+                    Astar.time_dist.put(child.currentStation, child.time);
+                    q.add(child);
+                    visited.add(child);
                  }
              }
          }
         return null;
     }
 
-    public double heuristic(State state,String algorithm){
+    public static double heuristic(State state,String algorithm){
         if (state.isFinal()){
             return 0.0;
         }
-        if(algorithm.equals("fastestTime")){
-            return State.edges.get(state.currentStation).get(State.finalState).distance;
-        }else if(algorithm.equals("leastCost")){
-            return State.edges.get(state.currentStation).get(State.finalState).distance;
-        }else if(algorithm.equals("maxHp")){
-            return State.edges.get(state.currentStation).get(State.finalState).distance;
+        Map<String, Edge> moves = State.edges.get(state.currentStation);
+        ArrayList<Double> arr = new ArrayList<>();
+
+        for (Map.Entry<String, Edge> entry : moves.entrySet()){
+            arr.add(entry.getValue().distance);
         }
-            return 0.0;
+        Collections.sort(arr);
+
+        double i=1;
+        double final_dist = State.edges.get(state.currentStation).get(State.finalState).distance;
+        for(Double d : arr){
+            if (final_dist == d){
+                return i/arr.size();
+            }
+            i++;
+        }
+        return 0.0;
     }
 
-    public double cost(State state,String algorithm){
+    public static double cost(State state,String algorithm){
         if(algorithm.equals("fastestTime")){
             return state.time;
         }else if(algorithm.equals("leastCost")){
