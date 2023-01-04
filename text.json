@@ -17,36 +17,36 @@
     "finalState" : "Kassaa"
   },
   "stations": {
-    "Hamak": [0.2, 0.1],
-    "Bab Touma": [ 0.3, 0.2],
-    "Bab sharqui": [0.4,0.5],
-    "Abbasyian": [0.5, 0.6],
-    "Kassaa": [0.4, 0.3]
+    "Hamak": [0.2, 0.2],
+    "Bab Touma": [ 0.2, 0.2],
+    "Bab sharqui": [0.2,0.2],
+    "Abbasyian": [0.0, 0.0],
+    "Kassaa": [0.2, 0.02]
   },
   "edges": {
     "Hamak": {
       "Bab sharqui": [5, true, false, 40, 50, "hamak - bab sharqui"],
-      "Bab Touma": [7, true, false, 40, 50, "hamak - bab touma"],
+      "Bab Touma": [7, true, true, 40, 50, "hamak - bab touma"],
       "Abbasyian": [9, false, false, 40, 50, "hamak - Abbasyian"],
       "Kassaa": [12, false, true, 40, 50, "hamak - Kassaa"]
     },
     "Bab sharqui": {
       "Hamak": [5, false, false, 40, 50, "Bab sharqui - Hamak"],
-      "Bab Touma": [3, false, true, 40, 50, "Bab sharqui - Bab Touma"],
+      "Bab Touma": [3, false, false, 40, 50, "Bab sharqui - Bab Touma"],
       "Abbasyian": [5, false, true, 40, 50, "Bab sharqui - Abbasyian"],
       "Kassaa": [12, false, false, 40, 50, "Bab sharqui - Kassaa"]
     },
     "Bab Touma": {
       "Hamak": [7, false, false, 40, 50, "Bab Touma - Hamak"],
       "Bab sharqui": [3, true, true, 40, 50, "Bab Touma - bab sharqui"],
-      "Abbasyian": [2, true, false, 40, 50, "Bab Touma - Abbasyian"],
+      "Abbasyian": [2, false, true, 40, 50, "Bab Touma - Abbasyian"],
       "Kassaa": [10, false, false, 40, 50, "Bab Touma - Kassaa"]
     },
     "Abbasyian": {
       "Hamak": [9, false, false, 40, 50, "Abbasyian - Hamak"],
       "Bab sharqui": [5, true, false, 40, 50, "Abbasyian - bab sharqui"],
       "Bab Touma": [2, false, false, 40, 50, "Abbasyian - Bab Touma"],
-      "Kassaa": [1, false, false, 40, 50, "Abbasyian - Kassaa"]
+      "Kassaa": [1, false, true, 40, 50, "Abbasyian - Kassaa"]
     },
     "Kassaa": {
       "Hamak": [12, false, false, 40, 50, "Kassaa - Hamak"],
