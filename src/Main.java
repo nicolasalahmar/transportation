@@ -5,20 +5,59 @@ public class Main {
 
     public static void main(String[] args) {
         State s = new State(null,10000, 0, 0,100, "Hamak", 0, "");
-        //this.stations.put(station name, [bus waiting time, taxi waiting time])
         Main.func();
+        fastestTime(s, "descending");
+        // Astar a = new Astar("allCosts","ascending", s);
+        // State t = a.search();
+        // System.out.println(State.best_values);
+    }
 
-        Astar a = new Astar("fastestTime","descending", s);
+    public static void leastCost(State s, String order){
+        Astar a = new Astar("leastCost",order, s);
 
-        double start = System.nanoTime();
-        State t = a.search();
-        double finish = System.nanoTime();
+        State t = a.t;
 
         System.out.println("path: ");
         t.printPath();
-        System.out.println("number of nodes processed: "+a.m);
-        System.out.println("number of nodes instantiated: "+a.n);
-        System.out.println("time of execution: "+((finish - start)/1000000)+" ms");
+        System.out.println("number of nodes processed: "+Astar.m);
+        System.out.println("number of nodes instantiated: "+Astar.n);
+        System.out.println("time of execution: "+((Astar.finish - Astar.start)/1000000)+" ms");
+    }
+
+    public static void fastestTime(State s, String order){
+        Astar a = new Astar("fastestTime",order, s);
+
+        State t = a.t;
+
+        System.out.println("path: ");
+        t.printPath();
+        System.out.println("number of nodes processed: "+Astar.m);
+        System.out.println("number of nodes instantiated: "+Astar.n);
+        System.out.println("time of execution: "+((Astar.finish - Astar.start)/1000000)+" ms");
+    }
+    
+    public static void maxHp(State s, String order){
+        Astar a = new Astar("maxHp",order, s);
+
+        State t = a.t;
+
+        System.out.println("path: ");
+        t.printPath();
+        System.out.println("number of nodes processed: "+Astar.m);
+        System.out.println("number of nodes instantiated: "+Astar.n);
+        System.out.println("time of execution: "+((Astar.finish - Astar.start)/1000000)+" ms");
+    }
+
+    public static void allCosts(State s, String order){
+        Astar a = new Astar("allCosts",order, s);
+
+        State t = a.t;
+
+        System.out.println("path: ");
+        t.printPath();
+        System.out.println("number of nodes processed: "+Astar.m);
+        System.out.println("number of nodes instantiated: "+Astar.n);
+        System.out.println("time of execution: "+((Astar.finish - Astar.start)/1000000)+" ms");
     }
 
     public static void func() {
