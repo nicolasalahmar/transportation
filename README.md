@@ -38,8 +38,8 @@ this gives us the following constraints:
 
 ### CONTRIBUTORS:
 
-1. Ehsan Abourshaed
-2. George Nigoghossian
-3. Johny Kodsy
-4. Rita Rezeq
-5. Nicolas Al Ahmar
+- Ehsan Abourshaed
+- George Nigoghossian
+- Johny Kodsy
+- Rita Rezeq
+- Nicolas Al Ahmar
